@@ -12,7 +12,10 @@ Utilized the editor's find-all-references feature and performed a project-wide s
 
 ## Comment 2 — Deduplication
 **What I did:**
+Followed the same pattern as `add_to_collection()` in `services/collection_service.py`: added an `AlreadyInWatchlistError` exception, and in `add_to_watchlist()` (services/watchlist_service.py) added a lookup for an existing `WatchlistEntry` with the same `user_id`/`film_id` before creating a new one, raising `AlreadyInWatchlistError` if one is found instead of inserting a duplicate. Wired the new exception into `POST /watchlist/<user_id>/add` (routes/watchlist/watchlist.py) so it returns a 409 with an error message, matching how `AlreadyInCollectionError` is handled in routes/collection.py.
+
 **How I verified:**
+Ran an ad-hoc script against an in-memory SQLite app: called `add_to_watchlist()` twice for the same user/film — the first call succeeded and the second raised `AlreadyInWatchlistError`, with only one `WatchlistEntry` row persisted in the DB. Also hit the route directly via Flask's test client: the first `POST /watchlist/<user_id>/add` returned 201, and the repeat call returned 409 with the expected error body.
 
 ## Comment 3 — Missing test
 **What I did:**
