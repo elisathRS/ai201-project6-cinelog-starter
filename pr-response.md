@@ -19,8 +19,10 @@ Ran an ad-hoc script against an in-memory SQLite app: called `add_to_watchlist()
 
 ## Comment 3 — Missing test
 **What I did:**
-Updated the 
+Created `tests/test_watchlist.py`. Read `tests/test_collection.py` and used `test_add_to_collection_nonexistent_film_raises` as the template, writing the equivalent `test_add_to_watchlist_nonexistent_film_raises` for `add_to_watchlist()`: same `app` fixture (isolated in-memory SQLite app) and `sample_user` fixture, and the same assertion pattern — calling `add_to_watchlist()` with a fake UUID film_id and asserting it raises `FilmNotFoundError` via `pytest.raises`.
+
 **How I verified:**
+Ran `pytest tests/test_watchlist.py -v` and confirmed `test_add_to_watchlist_nonexistent_film_raises` passes.
 
 ## Comment 4 — Default visibility
 **My position:**
